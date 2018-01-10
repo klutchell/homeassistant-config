@@ -1,0 +1,233 @@
+
+### VIEWS ###
+
+default_view:
+  view: yes
+  icon: mdi:home
+  entities:
+    - group.all_hue_lights
+    - group.all_wemo_switches
+    - group.all_protects
+    - group.all_thermostats
+    - group.all_cameras
+    - group.all_roomba_vacuuums
+
+climate_view:
+  name: Climate
+  view: yes
+  entities:
+    - group.weather
+    - group.hallway_thermostat
+
+lights_view:
+  name: Lights
+  view: yes
+  entities:
+    - group.master_bedroom_lights
+    - group.living_room_lights
+    - group.family_room_lights
+    - group.outside_lights
+
+switches_view:
+  name: Switches
+  view: yes
+  entities:
+    - group.family_room_switches
+
+protects_view:
+  name: Protects
+  view: yes
+  entities:
+    - group.hallway_nest_protect
+    - group.upstairs_nest_protect
+
+cameras_view:
+  name: Cameras
+  view: yes
+  entities:
+    - group.kitchen_camera
+
+media_players_view:
+  name: Media Players
+  view: yes
+  entities:
+    - media_player.master_bedroom_home_mini
+    - media_player.master_bedroom_tv
+    - media_player.living_room_home_mini
+    - media_player.living_room_speakers
+    - media_player.family_room_home
+    - media_player.family_room_shield
+    - media_player.family_room_sound_bar
+    - media_player.family_room_tv
+    - media_player.office_home
+    - media_player.office_speakers
+
+vacuum_cleaners_view:
+  name: Vacuums
+  view: yes
+  entities:
+    - vacuum.consuela
+
+### ROOMS ###
+
+master_bedroom_lights:
+  name: Master Bedroom
+  view: no
+  entities:
+    - light.master_bedroom
+
+living_room_lights:
+  name: Living Room
+  view: no
+  entities:
+    - light.living_room
+
+family_room_lights:
+  name: Family Room
+  view: no
+  entities:
+    - light.family_room
+
+family_room_switches:
+  name: Family Room
+  view: no
+  entities:
+    - switch.christmas_tree
+    - switch.fireplace
+
+outside_lights:
+  name: Outside
+  view: no
+  entities:
+    - light.driveway
+    - light.front_porch
+
+### DEVICE GROUPS ###
+
+all_roomba_vacuuums:
+  name: Vacuums
+  view: no
+  entities:
+    - vacuum.consuela
+
+all_hue_lights:
+  name: Lights
+  view: no
+  entities:
+    - light.master_bedroom
+    - light.family_room
+    - light.living_room
+    - light.driveway
+    - light.front_porch
+
+all_wemo_switches:
+  name: Switches
+  view: no
+  entities:
+    - switch.christmas_tree
+    - switch.fireplace
+
+all_protects:
+  name: Protects
+  view: no
+  control: hidden
+  entities:
+    - group.upstairs_nest_protect
+    - group.hallway_nest_protect
+
+all_cameras:
+  name: Cameras
+  view: no
+  control: hidden
+  entities:
+    - camera.kitchen
+
+all_thermostats:
+  name: Thermostats
+  view: no
+  entities:
+    - climate.hallway
+
+all_media_players:
+  name: Media Players
+  view: no
+  entities:
+    - media_player.master_bedroom_home_mini
+    - media_player.master_bedroom_tv
+    - media_player.living_room_home_mini
+    - media_player.living_room_speakers
+    - media_player.family_room_home
+    - media_player.family_room_shield
+    - media_player.family_room_sound_bar
+    - media_player.family_room_tv
+    - media_player.office_home
+    - media_player.office_speakers
+
+### DEVICES ###
+
+hallway_nest_protect:
+  name: Downstairs
+  view: no
+  control: hidden
+  entities:
+    - binary_sensor.hallway_nest_protect_online
+    - sensor.hallway_nest_protect_battery_health
+    - sensor.hallway_nest_protect_co_status
+    - sensor.hallway_nest_protect_smoke_status
+
+hallway_thermostat:
+  name: Thermostat
+  view: no
+  entities:
+    - climate.hallway
+    - binary_sensor.hallway_thermostat_fan
+    - binary_sensor.hallway_thermostat_has_leaf
+    - binary_sensor.hallway_thermostat_is_locked
+    - binary_sensor.hallway_thermostat_is_using_emergency_heat
+    - binary_sensor.hallway_thermostat_online
+    - sensor.hallway_thermostat_humidity
+    - sensor.hallway_thermostat_hvac_state
+    - sensor.hallway_thermostat_operation_mode
+    - sensor.hallway_thermostat_target
+    - sensor.hallway_thermostat_temperature
+
+kitchen_camera:
+  name: Kitchen
+  view: no
+  control: hidden
+  entities:
+    - camera.kitchen
+    - binary_sensor.kitchen_camera_online
+    - binary_sensor.kitchen_camera_motion_detected
+    - binary_sensor.kitchen_camera_person_detected
+    - binary_sensor.kitchen_camera_sound_detected
+
+upstairs_nest_protect:
+  name: Upstairs
+  view: no
+  control: hidden
+  entities:
+    - binary_sensor.upstairs_nest_protect_online
+    - sensor.upstairs_nest_protect_battery_health
+    - sensor.upstairs_nest_protect_co_status
+    - sensor.upstairs_nest_protect_smoke_status
+
+weather:
+  name: Current Weather
+  view: no
+  entities:
+    - sun.sun
+    - sensor.weather_cloudiness
+    - sensor.weather_dewpoint_temperature
+    - sensor.weather_fog
+    - sensor.weather_high_clouds
+    - sensor.weather_humidity
+    - sensor.weather_low_clouds
+    - sensor.weather_medium_clouds
+    - sensor.weather_precipitation
+    - sensor.weather_pressure
+    - sensor.weather_symbol
+    - sensor.weather_temperature
+    - sensor.weather_wind_direction
+    - sensor.weather_wind_speed
+    

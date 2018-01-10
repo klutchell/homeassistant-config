@@ -1,0 +1,26 @@
+- name: Family Room bright
+  entities:
+    light.family_room:
+      state: on
+      transition: 2
+      brightness_pct: 100
+      # kelvin: 2700
+      # profile: energize
+
+- name: Family Room normal
+  entities:
+    light.family_room:
+      state: on
+      transition: 2
+      brightness_pct: 66
+      # kelvin: 2700
+      # profile: concentrate
+
+- name: Family Room dim
+  entities:
+    light.family_room:
+      state: on
+      transition: 2
+      brightness_pct: 33
+      # kelvin: 2700
+      # profile: relax
