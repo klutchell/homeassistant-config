@@ -1,0 +1,5 @@
+
+ - platform: template
+   sensors:
+     away_mode:
+       value_template: "{{ states.climate.hallway.attributes.away_mode }}"
