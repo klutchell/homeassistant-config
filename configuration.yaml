@@ -26,10 +26,10 @@ http:
   # Secrets are defined in the file secrets.yaml
   api_password: !secret http_password
   # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-  #base_url: homeassistant.mydomain.com:8123
-  #server_port: 80
-  #ssl_certificate: /data/ssl/certificate.pem
-  #ssl_key: /data/ssl/privkey.pem
+  # base_url: homeassistant.mydomain.com:8123
+  # server_port: 80
+  # ssl_certificate: /data/ssl/certificate.pem
+  # ssl_key: /data/ssl/privkey.pem
 
 # Checks for available updates
 # Note: This component will send some information about your system to
