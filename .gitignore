@@ -1,1 +1,9 @@
 *
+
+!*.yaml
+
+secrets.yaml
+
+deps
+tts
+ssl

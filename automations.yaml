@@ -15,7 +15,7 @@
     entity_id: vacuum.consuela
 
 
-- alias: turn off lights when away
+- alias: turn off inside lights when away
   trigger:
     platform: state
     entity_id: sensor.away_mode
@@ -43,12 +43,31 @@
       entity_id: vacuum.consuela
 
 
+- alias: turn on inside lights when home
+  trigger:
+    platform: state
+    entity_id: sensor.away_mode
+    from: 'on'
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: sun.sun
+    state: 'below_horizon'
+  action:
+    service: light.turn_on
+    data:
+      entity_id:
+        - light.living_room
+        - light.family_room
+      profile: read
+
+
 #######################
 # wake and sleep
 #######################
 
 
-- alias: turn on lights weekdays at 6:30am
+- alias: fade on lights weekdays at 6:30am
   trigger:
     platform: time
     at: '6:30:00'
@@ -63,16 +82,23 @@
   action:
     - service: light.turn_on
       data:
-        entity_id: light.master_bedroom
+        entity_id:
+          - light.master_bedroom
+          - light.outside
         profile: energize
-        transition: 900
+        brightness: 1
+    - delay:
+        seconds: 1
     - service: light.turn_on
       data:
-        entity_id: light.outside
-        profile: concentrate
+        entity_id:
+          - light.master_bedroom
+          - light.outside
+        brightness: 254
+        transition: 900
 
 
-- alias: turn off lights at 11pm
+- alias: turn off all lights at 11pm
   trigger:
     platform: time
     at: '23:00:00'
@@ -90,7 +116,7 @@
 #######################
 
 
-- alias: turn off lights at sunrise
+- alias: turn off all lights at sunrise
   trigger:
     platform: sun
     event: sunrise
@@ -103,7 +129,7 @@
         - light.outside
 
 
-- alias: turn on lights at sunset
+- alias: turn on outside lights at sunset
   trigger:
     platform: sun
     event: sunset
@@ -114,12 +140,29 @@
       profile: concentrate
 
 
+- alias: turn on inside lights at sunset if home
+  trigger:
+    platform: sun
+    event: sunset
+  condition:
+    condition: state
+    entity_id: sensor.away_mode
+    state: 'off'
+  action:
+    service: light.turn_on
+    data:
+      entity_id:
+        - light.living_room
+        - light.family_room
+      profile: read
+
+
 #######################
 # motion and no motion
 #######################
 
 
-- alias: turn on lights when movement detected
+- alias: turn on inside lights when motion detected if away
   trigger:
     - platform: state
       entity_id: binary_sensor.kitchen_camera_motion_detected
@@ -135,8 +178,8 @@
       entity_id: sun.sun
       state: 'below_horizon'
     - condition: state
-      entity_id: light.family_room
-      state: 'off'
+      entity_id: sensor.away_mode
+      state: 'on'
   action:
     service: light.turn_on
     data:
@@ -146,7 +189,7 @@
         - light.living_room
 
 
-- alias: turn off lights 20 minutes after last movement detected
+- alias: turn off inside lights 20 minutes after last motion detected if away
   trigger:
     platform: state
     entity_id: binary_sensor.kitchen_camera_motion_detected
@@ -173,4 +216,3 @@
       entity_id:
         - light.family_room
         - light.living_room
-    
