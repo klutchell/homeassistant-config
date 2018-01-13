@@ -140,10 +140,11 @@
       profile: concentrate
 
 
-- alias: turn on inside lights at sunset if home
+- alias: turn on inside lights before sunset if home
   trigger:
     platform: sun
     event: sunset
+    offset: "-00:45:00" 
   condition:
     condition: state
     entity_id: sensor.away_mode
