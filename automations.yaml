@@ -116,10 +116,11 @@
 #######################
 
 
-- alias: turn off all lights at sunrise
+- alias: turn off all lights after sunrise
   trigger:
     platform: sun
     event: sunrise
+    offset: "+00:45:00" 
   action:
     service: light.turn_off
     data:
@@ -163,57 +164,57 @@
 #######################
 
 
-- alias: turn on inside lights when motion detected if away
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.kitchen_camera_motion_detected
-      to: 'on'
-    - platform: state
-      entity_id: binary_sensor.kitchen_camera_sound_detected
-      to: 'on'
-    - platform: state
-      entity_id: binary_sensor.kitchen_camera_person_detected
-      to: 'on'
-  condition:
-    - condition: state
-      entity_id: sun.sun
-      state: 'below_horizon'
-    - condition: state
-      entity_id: sensor.away_mode
-      state: 'on'
-  action:
-    service: light.turn_on
-    data:
-      profile: read
-      entity_id:
-        - light.family_room
-        - light.living_room
+# - alias: turn on inside lights when motion detected if away
+#   trigger:
+#     - platform: state
+#       entity_id: binary_sensor.kitchen_camera_motion_detected
+#       to: 'on'
+#     - platform: state
+#       entity_id: binary_sensor.kitchen_camera_sound_detected
+#       to: 'on'
+#     - platform: state
+#       entity_id: binary_sensor.kitchen_camera_person_detected
+#       to: 'on'
+#   condition:
+#     - condition: state
+#       entity_id: sun.sun
+#       state: 'below_horizon'
+#     - condition: state
+#       entity_id: sensor.away_mode
+#       state: 'on'
+#   action:
+#     service: light.turn_on
+#     data:
+#       profile: read
+#       entity_id:
+#         - light.family_room
+#         - light.living_room
 
 
-- alias: turn off inside lights 20 minutes after last motion detected if away
-  trigger:
-    platform: state
-    entity_id: binary_sensor.kitchen_camera_motion_detected
-    to: 'off'
-    for:
-      minutes: 20
-  condition:
-    - condition: state
-      entity_id: sensor.away_mode
-      state: 'on'
-    - condition: state
-      entity_id: binary_sensor.kitchen_camera_sound_detected
-      state: 'off'
-      for:
-        minutes: 20
-    - condition: state
-      entity_id: binary_sensor.kitchen_camera_person_detected
-      state: 'off'
-      for:
-        minutes: 20
-  action:
-    service: light.turn_off
-    data:
-      entity_id:
-        - light.family_room
-        - light.living_room
+# - alias: turn off inside lights 20 minutes after last motion detected if away
+#   trigger:
+#     platform: state
+#     entity_id: binary_sensor.kitchen_camera_motion_detected
+#     to: 'off'
+#     for:
+#       minutes: 20
+#   condition:
+#     - condition: state
+#       entity_id: sensor.away_mode
+#       state: 'on'
+#     - condition: state
+#       entity_id: binary_sensor.kitchen_camera_sound_detected
+#       state: 'off'
+#       for:
+#         minutes: 20
+#     - condition: state
+#       entity_id: binary_sensor.kitchen_camera_person_detected
+#       state: 'off'
+#       for:
+#         minutes: 20
+#   action:
+#     service: light.turn_off
+#     data:
+#       entity_id:
+#         - light.family_room
+#         - light.living_room
