@@ -60,19 +60,20 @@
     state: 'below_horizon'
   action:
     service: light.turn_on
-    data:
+    data_template:
       entity_id:
         - light.living_room
         - light.outside
-      {% if now().hour >= 6 and now().hour < 12 %} # morning
-      profile: energize
-      {% elif now().hour >= 12 and now().hour < 18 %} # afternoon
-      profile: concentrate
-      {% elif now().hour >= 18 and now().hour < 24 %} # evening
-      profile: read
-      {% else %} # night
-      profile: relax
-      {% endif %}
+      profile: >
+        {% if now().hour >= 6 and now().hour < 12 %}
+        energize
+        {% elif now().hour >= 12 and now().hour < 18 %}
+        concentrate
+        {% elif now().hour >= 18 and now().hour < 24 %}
+        read
+        {% else %}
+        relax
+        {% endif %}
 
 
 #######################
@@ -85,9 +86,9 @@
     platform: time
     at: '6:00:00'
   action:
-    - service: light.turn_on
-    data:
-      entity_id:
+    service: light.turn_on
+    data_template:
+      entity_id: >
         {% if is_state('light.living_room', 'on') %}
         - light.living_room
         {% endif %}
@@ -108,9 +109,9 @@
     platform: time
     at: '12:00:00'
   action:
-    - service: light.turn_on
-    data:
-      entity_id:
+    service: light.turn_on
+    data_template:
+      entity_id: >
         {% if is_state('light.living_room', 'on') %}
         - light.living_room
         {% endif %}
@@ -131,9 +132,9 @@
     platform: time
     at: '18:00:00'
   action:
-    - service: light.turn_on
-    data:
-      entity_id:
+    service: light.turn_on
+    data_template:
+      entity_id: >
         {% if is_state('light.living_room', 'on') %}
         - light.living_room
         {% endif %}
@@ -152,11 +153,11 @@
 - alias: change light profiles at 12am
   trigger:
     platform: time
-    at: '24:00:00'
+    at: '00:00:00'
   action:
-    - service: light.turn_on
-    data:
-      entity_id:
+    service: light.turn_on
+    data_template:
+      entity_id: >
         {% if is_state('light.living_room', 'on') %}
         - light.living_room
         {% endif %}
@@ -196,7 +197,7 @@
           - light.living_room
           - light.master_bedroom
           - light.outside
-        xy_color: 0.3146,0.3304 # energize
+        xy_color: 0.3146,0.3304
         brightness: 1
     - delay:
         seconds: 1
@@ -205,9 +206,9 @@
         entity_id:
           - light.master_bedroom
           - light.outside
-        xy_color: 0.3146,0.3304 # energize
+        xy_color: 0.3146,0.3304
         brightness: 254
-        transition: 900 # 15 min
+        transition: 900
 
 
 - alias: turn off lights at 11pm
@@ -247,19 +248,20 @@
     offset: "-00:30:00" 
   action:
     service: light.turn_on
-    data:
+    data_template:
       entity_id:
         - light.outside
         - light.living_room
-      {% if now().hour >= 6 and now().hour < 12 %} # morning
-      profile: energize
-      {% elif now().hour >= 12 and now().hour < 18 %} # afternoon
-      profile: concentrate
-      {% elif now().hour >= 18 and now().hour < 24 %} # evening
-      profile: read
-      {% else %} # night
-      profile: relax
-      {% endif %}
+      profile: >
+        {% if now().hour >= 6 and now().hour < 12 %}
+        energize
+        {% elif now().hour >= 12 and now().hour < 18 %}
+        concentrate
+        {% elif now().hour >= 18 and now().hour < 24 %}
+        read
+        {% else %}
+        relax
+        {% endif %}
 
 
 #######################
@@ -290,18 +292,19 @@
     state: 'off'
   action:
     service: light.turn_on
-    data:
+    data_template:
       entity_id:
         - light.family_room
-      {% if now().hour >= 6 and now().hour < 12 %} # morning
-      profile: energize
-      {% elif now().hour >= 12 and now().hour < 18 %} # afternoon
-      profile: concentrate
-      {% elif now().hour >= 18 and now().hour < 24 %} # evening
-      profile: read
-      {% else %} # night
-      profile: relax
-      {% endif %}
+      profile: >
+        {% if now().hour >= 6 and now().hour < 12 %}
+        energize
+        {% elif now().hour >= 12 and now().hour < 18 %}
+        concentrate
+        {% elif now().hour >= 18 and now().hour < 24 %}
+        read
+        {% else %}
+        relax
+        {% endif %}
 
 
 - alias: turn off lights after last motion detected
