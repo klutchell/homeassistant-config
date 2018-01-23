@@ -99,6 +99,7 @@
         {%- endif %}
         {%- if is_state('light.outside', 'on') %}
         - light.outside
+        {%- endif %}
       profile: energize
 
 
@@ -121,6 +122,7 @@
         {%- endif %}
         {%- if is_state('light.outside', 'on') %}
         - light.outside
+        {%- endif %}
       profile: concentrate
 
 
@@ -143,6 +145,7 @@
         {%- endif %}
         {%- if is_state('light.outside', 'on') %}
         - light.outside
+        {%- endif %}
       profile: read
 
 
@@ -165,6 +168,7 @@
         {%- endif %}
         {%- if is_state('light.outside', 'on') %}
         - light.outside
+        {%- endif %}
       profile: relax
 
 
