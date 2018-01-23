@@ -43,7 +43,7 @@
       entity_id: vacuum.consuela
 
 
-- alias: turn on inside lights when home
+- alias: turn on lights when home
   trigger:
     platform: state
     entity_id: sensor.away_mode
@@ -58,8 +58,15 @@
     data:
       entity_id:
         - light.living_room
-        - light.family_room
+      {%- if now().hour >= 6 and now().hour < 12 %} # morning
+      profile: energize
+      {% elif now().hour >= 12 and now().hour < 18 %} # afternoon
+      profile: concentrate
+      {% elif now().hour >= 18 and now().hour < 24 %} # evening
       profile: read
+      {% else %} # night
+      profile: relax
+      {%- endif %}
 
 
 #######################
@@ -84,8 +91,10 @@
       data:
         entity_id:
           - light.master_bedroom
+          - light.family_room
+          - light.living_room
           - light.outside
-        profile: energize
+        xy_color: 0.3146,0.3304 # energize
         brightness: 1
     - delay:
         seconds: 1
@@ -93,9 +102,12 @@
       data:
         entity_id:
           - light.master_bedroom
+          - light.family_room
+          - light.living_room
           - light.outside
+        xy_color: 0.3146,0.3304 # energize
         brightness: 254
-        transition: 900
+        transition: 900 # 15 min
 
 
 - alias: turn off all lights at 11pm
@@ -120,7 +132,7 @@
   trigger:
     platform: sun
     event: sunrise
-    offset: "+00:45:00" 
+    offset: "+00:30:00" 
   action:
     service: light.turn_off
     data:
@@ -137,26 +149,44 @@
   action:
     service: light.turn_on
     data:
-      entity_id: light.outside
-      profile: concentrate
-
-
-- alias: turn on inside lights before sunset if home
-  trigger:
-    platform: sun
-    event: sunset
-    offset: "-00:45:00" 
-  condition:
-    condition: state
-    entity_id: sensor.away_mode
-    state: 'off'
-  action:
-    service: light.turn_on
-    data:
       entity_id:
+        - light.outside
         - light.living_room
-        - light.family_room
+      {%- if now().hour >= 6 and now().hour < 12 %} # morning
+      profile: energize
+      {% elif now().hour >= 12 and now().hour < 18 %} # afternoon
+      profile: concentrate
+      {% elif now().hour >= 18 and now().hour < 24 %} # evening
       profile: read
+      {% else %} # night
+      profile: relax
+      {%- endif %}
+
+
+# - alias: turn on inside lights before sunset if home
+#   trigger:
+#     platform: sun
+#     event: sunset
+#     offset: "-00:45:00" 
+#   condition:
+#     condition: state
+#     entity_id: sensor.away_mode
+#     state: 'off'
+#   action:
+#     service: light.turn_on
+#     data:
+#       entity_id:
+#         - light.living_room
+#         - light.family_room
+#       {%- if now().hour >= 6 and now().hour < 12 %} # morning
+#       profile: energize
+#       {% elif now().hour >= 12 and now().hour < 18 %} # afternoon
+#       profile: concentrate
+#       {% elif now().hour >= 18 and now().hour < 24 %} # evening
+#       profile: read
+#       {% else %} # night
+#       profile: relax
+#       {%- endif %}
 
 
 #######################
@@ -164,57 +194,66 @@
 #######################
 
 
-# - alias: turn on inside lights when motion detected if away
-#   trigger:
-#     - platform: state
-#       entity_id: binary_sensor.kitchen_camera_motion_detected
-#       to: 'on'
-#     - platform: state
-#       entity_id: binary_sensor.kitchen_camera_sound_detected
-#       to: 'on'
-#     - platform: state
-#       entity_id: binary_sensor.kitchen_camera_person_detected
-#       to: 'on'
-#   condition:
-#     - condition: state
-#       entity_id: sun.sun
-#       state: 'below_horizon'
-#     - condition: state
-#       entity_id: sensor.away_mode
-#       state: 'on'
-#   action:
-#     service: light.turn_on
-#     data:
-#       profile: read
-#       entity_id:
-#         - light.family_room
-#         - light.living_room
+- alias: turn on lights when motion detected
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.kitchen_camera_motion_detected
+      to: 'on'
+    - platform: state
+      entity_id: binary_sensor.kitchen_camera_sound_detected
+      to: 'on'
+    - platform: state
+      entity_id: binary_sensor.kitchen_camera_person_detected
+      to: 'on'
+  condition:
+    # - condition: state
+    #   entity_id: sensor.away_mode
+    #   state: 'on'
+    - condition: state
+      entity_id: sun.sun
+      state: 'below_horizon'
+  action:
+    service: light.turn_on
+    data:
+      entity_id:
+        - light.family_room
+      {%- if now().hour >= 6 and now().hour < 12 %} # morning
+      profile: energize
+      {% elif now().hour >= 12 and now().hour < 18 %} # afternoon
+      profile: concentrate
+      {% elif now().hour >= 18 and now().hour < 24 %} # evening
+      profile: read
+      {% else %} # night
+      profile: relax
+      {%- endif %}
 
 
-# - alias: turn off inside lights 20 minutes after last motion detected if away
-#   trigger:
-#     platform: state
-#     entity_id: binary_sensor.kitchen_camera_motion_detected
-#     to: 'off'
-#     for:
-#       minutes: 20
-#   condition:
-#     - condition: state
-#       entity_id: sensor.away_mode
-#       state: 'on'
-#     - condition: state
-#       entity_id: binary_sensor.kitchen_camera_sound_detected
-#       state: 'off'
-#       for:
-#         minutes: 20
-#     - condition: state
-#       entity_id: binary_sensor.kitchen_camera_person_detected
-#       state: 'off'
-#       for:
-#         minutes: 20
-#   action:
-#     service: light.turn_off
-#     data:
-#       entity_id:
-#         - light.family_room
-#         - light.living_room
+- alias: turn off lights after last motion detected
+  trigger:
+    platform: time
+    minutes: '/5' # check every 5 minutes
+    seconds: 00
+  condition:
+    # - condition: state
+    #   entity_id: sensor.away_mode
+    #   state: 'on'
+    - condition: state
+      entity_id: binary_sensor.kitchen_camera_motion_detected
+      state: 'off'
+      for:
+        minutes: 60
+    - condition: state
+      entity_id: binary_sensor.kitchen_camera_sound_detected
+      state: 'off'
+      for:
+        minutes: 60
+    - condition: state
+      entity_id: binary_sensor.kitchen_camera_person_detected
+      state: 'off'
+      for:
+        minutes: 60
+  action:
+    service: light.turn_off
+    data:
+      entity_id:
+        - light.family_room
