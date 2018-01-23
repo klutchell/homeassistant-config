@@ -240,10 +240,11 @@
         - light.outside
 
 
-- alias: turn on lights at sunset
+- alias: turn on lights before sunset
   trigger:
     platform: sun
     event: sunset
+    offset: "-00:30:00" 
   action:
     service: light.turn_on
     data:
@@ -259,32 +260,6 @@
       {% else %} # night
       profile: relax
       {% endif %}
-
-
-# - alias: turn on inside lights before sunset if home
-#   trigger:
-#     platform: sun
-#     event: sunset
-#     offset: "-00:45:00" 
-#   condition:
-#     condition: state
-#     entity_id: sensor.away_mode
-#     state: 'off'
-#   action:
-#     service: light.turn_on
-#     data:
-#       entity_id:
-#         - light.living_room
-#         - light.family_room
-#       {% if now().hour >= 6 and now().hour < 12 %} # morning
-#       profile: energize
-#       {% elif now().hour >= 12 and now().hour < 18 %} # afternoon
-#       profile: concentrate
-#       {% elif now().hour >= 18 and now().hour < 24 %} # evening
-#       profile: read
-#       {% else %} # night
-#       profile: relax
-#       {% endif %}
 
 
 #######################
