@@ -64,7 +64,7 @@
       entity_id:
         - light.living_room
         - light.outside
-      {%- if now().hour >= 6 and now().hour < 12 %} # morning
+      {% if now().hour >= 6 and now().hour < 12 %} # morning
       profile: energize
       {% elif now().hour >= 12 and now().hour < 18 %} # afternoon
       profile: concentrate
@@ -72,7 +72,7 @@
       profile: read
       {% else %} # night
       profile: relax
-      {%- endif %}
+      {% endif %}
 
 
 #######################
@@ -88,18 +88,18 @@
     - service: light.turn_on
     data:
       entity_id:
-        {%- if is_state('light.living_room', 'on') %}
+        {% if is_state('light.living_room', 'on') %}
         - light.living_room
-        {%- endif %}
-        {%- if is_state('light.family_room', 'on') %}
+        {% endif %}
+        {% if is_state('light.family_room', 'on') %}
         - light.family_room
-        {%- endif %}
-        {%- if is_state('light.master_bedroom', 'on') %}
+        {% endif %}
+        {% if is_state('light.master_bedroom', 'on') %}
         - light.master_bedroom
-        {%- endif %}
-        {%- if is_state('light.outside', 'on') %}
+        {% endif %}
+        {% if is_state('light.outside', 'on') %}
         - light.outside
-        {%- endif %}
+        {% endif %}
       profile: energize
 
 
@@ -111,18 +111,18 @@
     - service: light.turn_on
     data:
       entity_id:
-        {%- if is_state('light.living_room', 'on') %}
+        {% if is_state('light.living_room', 'on') %}
         - light.living_room
-        {%- endif %}
-        {%- if is_state('light.family_room', 'on') %}
+        {% endif %}
+        {% if is_state('light.family_room', 'on') %}
         - light.family_room
-        {%- endif %}
-        {%- if is_state('light.master_bedroom', 'on') %}
+        {% endif %}
+        {% if is_state('light.master_bedroom', 'on') %}
         - light.master_bedroom
-        {%- endif %}
-        {%- if is_state('light.outside', 'on') %}
+        {% endif %}
+        {% if is_state('light.outside', 'on') %}
         - light.outside
-        {%- endif %}
+        {% endif %}
       profile: concentrate
 
 
@@ -134,18 +134,18 @@
     - service: light.turn_on
     data:
       entity_id:
-        {%- if is_state('light.living_room', 'on') %}
+        {% if is_state('light.living_room', 'on') %}
         - light.living_room
-        {%- endif %}
-        {%- if is_state('light.family_room', 'on') %}
+        {% endif %}
+        {% if is_state('light.family_room', 'on') %}
         - light.family_room
-        {%- endif %}
-        {%- if is_state('light.master_bedroom', 'on') %}
+        {% endif %}
+        {% if is_state('light.master_bedroom', 'on') %}
         - light.master_bedroom
-        {%- endif %}
-        {%- if is_state('light.outside', 'on') %}
+        {% endif %}
+        {% if is_state('light.outside', 'on') %}
         - light.outside
-        {%- endif %}
+        {% endif %}
       profile: read
 
 
@@ -157,18 +157,18 @@
     - service: light.turn_on
     data:
       entity_id:
-        {%- if is_state('light.living_room', 'on') %}
+        {% if is_state('light.living_room', 'on') %}
         - light.living_room
-        {%- endif %}
-        {%- if is_state('light.family_room', 'on') %}
+        {% endif %}
+        {% if is_state('light.family_room', 'on') %}
         - light.family_room
-        {%- endif %}
-        {%- if is_state('light.master_bedroom', 'on') %}
+        {% endif %}
+        {% if is_state('light.master_bedroom', 'on') %}
         - light.master_bedroom
-        {%- endif %}
-        {%- if is_state('light.outside', 'on') %}
+        {% endif %}
+        {% if is_state('light.outside', 'on') %}
         - light.outside
-        {%- endif %}
+        {% endif %}
       profile: relax
 
 
@@ -250,7 +250,7 @@
       entity_id:
         - light.outside
         - light.living_room
-      {%- if now().hour >= 6 and now().hour < 12 %} # morning
+      {% if now().hour >= 6 and now().hour < 12 %} # morning
       profile: energize
       {% elif now().hour >= 12 and now().hour < 18 %} # afternoon
       profile: concentrate
@@ -258,7 +258,7 @@
       profile: read
       {% else %} # night
       profile: relax
-      {%- endif %}
+      {% endif %}
 
 
 # - alias: turn on inside lights before sunset if home
@@ -276,7 +276,7 @@
 #       entity_id:
 #         - light.living_room
 #         - light.family_room
-#       {%- if now().hour >= 6 and now().hour < 12 %} # morning
+#       {% if now().hour >= 6 and now().hour < 12 %} # morning
 #       profile: energize
 #       {% elif now().hour >= 12 and now().hour < 18 %} # afternoon
 #       profile: concentrate
@@ -284,7 +284,7 @@
 #       profile: read
 #       {% else %} # night
 #       profile: relax
-#       {%- endif %}
+#       {% endif %}
 
 
 #######################
@@ -318,7 +318,7 @@
     data:
       entity_id:
         - light.family_room
-      {%- if now().hour >= 6 and now().hour < 12 %} # morning
+      {% if now().hour >= 6 and now().hour < 12 %} # morning
       profile: energize
       {% elif now().hour >= 12 and now().hour < 18 %} # afternoon
       profile: concentrate
@@ -326,7 +326,7 @@
       profile: read
       {% else %} # night
       profile: relax
-      {%- endif %}
+      {% endif %}
 
 
 - alias: turn off lights after last motion detected
