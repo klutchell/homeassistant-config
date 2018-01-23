@@ -204,6 +204,7 @@
     - service: light.turn_on
       data:
         entity_id:
+          - light.living_room
           - light.master_bedroom
           - light.outside
         xy_color: 0.3146,0.3304
@@ -310,27 +311,32 @@
 - alias: turn off lights after last motion detected
   trigger:
     platform: time
-    minutes: '/5' # check every 5 minutes
+    minutes: '/5' # check every 5 min
     seconds: 00
   condition:
     # - condition: state
     #   entity_id: sensor.away_mode
     #   state: 'on'
     - condition: state
+      entity_id: light.family_room
+      state: 'on'
+      for:
+        minutes: 60 # only if light on for 60 min
+    - condition: state
       entity_id: binary_sensor.kitchen_camera_motion_detected
       state: 'off'
       for:
-        minutes: 60
+        minutes: 60 # only if no motion for for 60 min
     - condition: state
       entity_id: binary_sensor.kitchen_camera_sound_detected
       state: 'off'
       for:
-        minutes: 60
+        minutes: 60 # only if no sound for for 60 min
     - condition: state
       entity_id: binary_sensor.kitchen_camera_person_detected
       state: 'off'
       for:
-        minutes: 60
+        minutes: 60 # only if no person for for 60 min
   action:
     service: light.turn_off
     data:
