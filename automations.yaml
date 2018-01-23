@@ -70,6 +70,99 @@
 
 
 #######################
+# time of day profiles
+#######################
+
+
+- alias: change light profiles at 6am
+  trigger:
+    platform: time
+    at: '6:00:00'
+  action:
+    - service: light.turn_on
+    data:
+      entity_id:
+        {%- if is_state('light.living_room', 'on') %}
+        - light.living_room
+        {%- endif %}
+        {%- if is_state('light.family_room', 'on') %}
+        - light.family_room
+        {%- endif %}
+        {%- if is_state('light.master_bedroom', 'on') %}
+        - light.master_bedroom
+        {%- endif %}
+        {%- if is_state('light.outside', 'on') %}
+        - light.outside
+      profile: energize
+
+
+- alias: change light profiles at 12pm
+  trigger:
+    platform: time
+    at: '12:00:00'
+  action:
+    - service: light.turn_on
+    data:
+      entity_id:
+        {%- if is_state('light.living_room', 'on') %}
+        - light.living_room
+        {%- endif %}
+        {%- if is_state('light.family_room', 'on') %}
+        - light.family_room
+        {%- endif %}
+        {%- if is_state('light.master_bedroom', 'on') %}
+        - light.master_bedroom
+        {%- endif %}
+        {%- if is_state('light.outside', 'on') %}
+        - light.outside
+      profile: concentrate
+
+
+- alias: change light profiles at 6pm
+  trigger:
+    platform: time
+    at: '18:00:00'
+  action:
+    - service: light.turn_on
+    data:
+      entity_id:
+        {%- if is_state('light.living_room', 'on') %}
+        - light.living_room
+        {%- endif %}
+        {%- if is_state('light.family_room', 'on') %}
+        - light.family_room
+        {%- endif %}
+        {%- if is_state('light.master_bedroom', 'on') %}
+        - light.master_bedroom
+        {%- endif %}
+        {%- if is_state('light.outside', 'on') %}
+        - light.outside
+      profile: read
+
+
+- alias: change light profiles at 12am
+  trigger:
+    platform: time
+    at: '24:00:00'
+  action:
+    - service: light.turn_on
+    data:
+      entity_id:
+        {%- if is_state('light.living_room', 'on') %}
+        - light.living_room
+        {%- endif %}
+        {%- if is_state('light.family_room', 'on') %}
+        - light.family_room
+        {%- endif %}
+        {%- if is_state('light.master_bedroom', 'on') %}
+        - light.master_bedroom
+        {%- endif %}
+        {%- if is_state('light.outside', 'on') %}
+        - light.outside
+      profile: relax
+
+
+#######################
 # wake and sleep
 #######################
 
@@ -91,8 +184,6 @@
       data:
         entity_id:
           - light.master_bedroom
-          - light.family_room
-          - light.living_room
           - light.outside
         xy_color: 0.3146,0.3304 # energize
         brightness: 1
@@ -102,15 +193,13 @@
       data:
         entity_id:
           - light.master_bedroom
-          - light.family_room
-          - light.living_room
           - light.outside
         xy_color: 0.3146,0.3304 # energize
         brightness: 254
         transition: 900 # 15 min
 
 
-- alias: turn off all lights at 11pm
+- alias: turn off lights at 11pm
   trigger:
     platform: time
     at: '23:00:00'
