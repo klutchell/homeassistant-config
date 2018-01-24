@@ -84,3 +84,7 @@ vacuum:
     
 ifttt:
   key: !secret ifttt_key
+
+python_script:
+
+hello_state:
