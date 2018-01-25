@@ -309,6 +309,7 @@
         - light.family_room
         - light.living_room
         - light.outside
+        - light.master_bedroom
 
 
 - alias: turn on lights before sunset
