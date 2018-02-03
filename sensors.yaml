@@ -54,3 +54,22 @@
         {% set next_event = 'rising' %}
         {% endif %}
         {{ next_event }}
+
+
+- platform: template
+  sensors:
+    current_sun_profile:
+      value_template: >-
+        {% if is_state('sensor.next_sun_event','noon') %}
+        energize
+        {% elif is_state('sensor.next_sun_event','setting') %}
+        concentrate
+        {% elif is_state('sensor.next_sun_event','dusk') %}
+        read
+        {% elif is_state('sensor.next_sun_event','midnight') %}
+        relax
+        {% elif is_state('sensor.next_sun_event','dawn') %}
+        relax
+        {% elif is_state('sensor.next_sun_event','rising') %}
+        energize
+        {% endif %}
