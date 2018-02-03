@@ -16,8 +16,41 @@
     - mediumClouds
     - highClouds
     - dewpointTemperature
-      
+
+
 - platform: template
   sensors:
     away_mode:
       value_template: "{{ states.climate.hallway.attributes.away_mode }}"
+
+
+- platform: template
+  sensors:
+    next_sun_event:
+      value_template: >-
+        {% set next_time = 86400 %}
+        {% if as_timestamp(states.sun.sun.attributes.next_noon) - as_timestamp(now()) < next_time %}
+        {% set next_time = as_timestamp(states.sun.sun.attributes.next_noon) - as_timestamp(now()) %}
+        {% set next_event = 'noon' %}
+        {% endif %}
+        {% if as_timestamp(states.sun.sun.attributes.next_setting) - as_timestamp(now()) < next_time %}
+        {% set next_time = as_timestamp(states.sun.sun.attributes.next_setting) - as_timestamp(now()) %}
+        {% set next_event = 'setting' %}
+        {% endif %}
+        {% if as_timestamp(states.sun.sun.attributes.next_dusk) - as_timestamp(now()) < next_time %}
+        {% set next_time = as_timestamp(states.sun.sun.attributes.next_dusk) - as_timestamp(now()) %}
+        {% set next_event = 'dusk' %}
+        {% endif %}
+        {% if as_timestamp(states.sun.sun.attributes.next_midnight) - as_timestamp(now()) < next_time %}
+        {% set next_time = as_timestamp(states.sun.sun.attributes.next_midnight) - as_timestamp(now()) %}
+        {% set next_event = 'midnight' %}
+        {% endif %}
+        {% if as_timestamp(states.sun.sun.attributes.next_dawn) - as_timestamp(now()) < next_time %}
+        {% set next_time = as_timestamp(states.sun.sun.attributes.next_dawn) - as_timestamp(now()) %}
+        {% set next_event = 'dawn' %}
+        {% endif %}
+        {% if as_timestamp(states.sun.sun.attributes.next_rising) - as_timestamp(now()) < next_time %}
+        {% set next_time = as_timestamp(states.sun.sun.attributes.next_rising) - as_timestamp(now()) %}
+        {% set next_event = 'rising' %}
+        {% endif %}
+        {{ next_event }}

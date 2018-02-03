@@ -66,14 +66,18 @@
         - light.family_room
         - light.outside
       profile: >
-        {% if now().hour >= 6 and now().hour < 12 %}
+        {%- if is_state('sensor.next_sun_event','noon') %}
         energize
-        {% elif now().hour >= 12 and now().hour < 18 %}
+        {% elif is_state('sensor.next_sun_event','setting') %}
         concentrate
-        {% elif now().hour >= 18 and now().hour < 24 %}
+        {% elif is_state('sensor.next_sun_event','dusk') %}
         read
-        {% else %}
+        {% elif is_state('sensor.next_sun_event','midnight') %}
         relax
+        {% elif is_state('sensor.next_sun_event','dawn') %}
+        relax
+        {% elif is_state('sensor.next_sun_event','rising') %}
+        energize
         {% endif %}
 
 
@@ -82,73 +86,29 @@
 #######################
 
 
-- alias: change outside light profile
-  trigger:
-    - platform: state
-      entity_id: light.outside
-      from: 'off'
-      to: 'on'
-    - platform: time
-      at: '0:00:00'
-    - platform: time
-      at: '6:00:00'
-    - platform: time
-      at: '12:00:00'
-    - platform: time
-      at: '18:00:00'
-  condition:
-    condition: state
-    entity_id: light.outside
-    state: 'on'
-  action:
-    service: light.turn_on
-    data_template:
-      entity_id: light.outside
-      # brightness: '{{states.light.outside.attributes.brightness}}'
-      profile: >
-        {%- if now().hour >= 6 and now().hour < 12 %}
-        energize
-        {% elif now().hour >= 12 and now().hour < 18 %}
-        concentrate
-        {% elif now().hour >= 18 and now().hour < 24 %}
-        read
-        {% else %}
-        relax
-        {% endif %}
-
-
 - alias: change living_room light profile
   trigger:
     - platform: state
       entity_id: light.living_room
       from: 'off'
       to: 'on'
-    - platform: time
-      at: '0:00:00'
-    - platform: time
-      at: '6:00:00'
-    - platform: time
-      at: '12:00:00'
-    - platform: time
-      at: '18:00:00'
-  condition:
-    condition: state
-    entity_id: light.living_room
-    state: 'on'
   action:
     service: light.turn_on
     data_template:
       entity_id: light.living_room
-      # brightness: '{{states.light.living_room.attributes.brightness}}'
       profile: >
-        {%- if now().hour >= 6 and now().hour < 12 %}
+        {%- if is_state('sensor.next_sun_event','noon') %}
         energize
-        {% elif now().hour >= 12 and now().hour < 18 %}
+        {% elif is_state('sensor.next_sun_event','setting') %}
         concentrate
-        {% elif now().hour >= 18 and now().hour < 24 %}
+        {% elif is_state('sensor.next_sun_event','dusk') %}
         read
-        {% else %}
+        {% elif is_state('sensor.next_sun_event','midnight') %}
         relax
+        {% elif is_state('sensor.next_sun_event','dawn') %}
+        relax
+        {% elif is_state('sensor.next_sun_event','rising') %}
+        energize
         {% endif %}
 
 
@@ -158,68 +118,55 @@
       entity_id: light.family_room
       from: 'off'
       to: 'on'
-    - platform: time
-      at: '0:00:00'
-    - platform: time
-      at: '6:00:00'
-    - platform: time
-      at: '12:00:00'
-    - platform: time
-      at: '18:00:00'
-  condition:
-    condition: state
-    entity_id: light.family_room
-    state: 'on'
   action:
     service: light.turn_on
     data_template:
       entity_id: light.family_room
-      # brightness: '{{states.light.family_room.attributes.brightness}}'
       profile: >
-        {%- if now().hour >= 6 and now().hour < 12 %}
+        {%- if is_state('sensor.next_sun_event','noon') %}
         energize
-        {% elif now().hour >= 12 and now().hour < 18 %}
+        {% elif is_state('sensor.next_sun_event','setting') %}
         concentrate
-        {% elif now().hour >= 18 and now().hour < 24 %}
+        {% elif is_state('sensor.next_sun_event','dusk') %}
         read
-        {% else %}
+        {% elif is_state('sensor.next_sun_event','midnight') %}
         relax
+        {% elif is_state('sensor.next_sun_event','dawn') %}
+        relax
+        {% elif is_state('sensor.next_sun_event','rising') %}
+        energize
         {% endif %}
 
 
-# - alias: change master_bedroom light profile
-#   trigger:
-#     - platform: state
-#       entity_id: light.master_bedroom
-#       from: 'off'
-#       to: 'on'
-#     - platform: time
-#       at: '0:00:00'
-#     - platform: time
-#       at: '6:00:00'
-#     - platform: time
-#       at: '12:00:00'
-#     - platform: time
-#       at: '18:00:00'
-#   condition:
-#     condition: state
-#     entity_id: light.master_bedroom
-#     state: 'on'
-#   action:
-#     service: light.turn_on
-#     data_template:
-#       entity_id: light.master_bedroom
-#       brightness: '{{states.light.master_bedroom.attributes.brightness}}'
-#       profile: >
-#         {%- if now().hour >= 6 and now().hour < 12 %}
-#         energize
-#         {% elif now().hour >= 12 and now().hour < 18 %}
-#         concentrate
-#         {% elif now().hour >= 18 and now().hour < 24 %}
-#         read
-#         {% else %}
-#         relax
-#         {% endif %}
+- alias: change master_bedroom light profile
+  trigger:
+    - platform: state
+      entity_id: light.master_bedroom
+      from: 'off'
+      to: 'on'
+  condition:
+    - condition: numeric_state
+      entity_id: light.master_bedroom
+      value_template: '{{ states.light.master_bedroom.attributes.brightness }}'
+      above: 100
+  action:
+    service: light.turn_on
+    data_template:
+      entity_id: light.master_bedroom
+      profile: >
+        {%- if is_state('sensor.next_sun_event','noon') %}
+        energize
+        {% elif is_state('sensor.next_sun_event','setting') %}
+        concentrate
+        {% elif is_state('sensor.next_sun_event','dusk') %}
+        read
+        {% elif is_state('sensor.next_sun_event','midnight') %}
+        relax
+        {% elif is_state('sensor.next_sun_event','dawn') %}
+        relax
+        {% elif is_state('sensor.next_sun_event','rising') %}
+        energize
+        {% endif %}
 
 
 #######################
@@ -252,31 +199,8 @@
       data:
         entity_id:
           - light.master_bedroom
-        profile: energize
         brightness: 254
         transition: 900
-
-
-- alias: turn on lights weekdays at 6:30am
-  trigger:
-    platform: time
-    at: '6:30:00'
-  condition:
-    condition: time
-    weekday:
-      - mon
-      - tue
-      - wed
-      - thu
-      - fri
-  action:
-    - service: light.turn_on
-      data:
-        entity_id:
-          - light.family_room
-          - light.living_room
-          - light.outside
-        profile: energize
 
 
 - alias: turn off lights at 11pm
@@ -297,11 +221,40 @@
 #######################
 
 
+- alias: turn on lights before sunrise
+  trigger:
+    - platform: sun
+      event: sunrise
+      offset: "-01:00:00"
+  action:
+    service: light.turn_on
+    data_template:
+      entity_id:
+        - light.family_room
+        - light.living_room
+        - light.outside
+      profile: energize
+
+
+- alias: turn on lights at sunrise
+  trigger:
+    - platform: sun
+      event: sunrise
+  action:
+    service: light.turn_on
+    data_template:
+      entity_id:
+        - light.family_room
+        - light.living_room
+        - light.outside
+      profile: energize
+
+
 - alias: turn off lights after sunrise
   trigger:
-    platform: sun
-    event: sunrise
-    offset: "+00:30:00" 
+    - platform: sun
+      event: sunrise
+      offset: "+01:00:00"
   action:
     service: light.turn_off
     data:
@@ -314,9 +267,13 @@
 
 - alias: turn on lights before sunset
   trigger:
-    platform: sun
-    event: sunset
-    offset: "-00:30:00" 
+    - platform: sun
+      event: sunset
+      offset: "-01:00:00"
+    # - platform: numeric_state
+    #   entity_id: sun.sun
+    #   value_template: '{{ state.attributes.elevation }}'
+    #   below: 3.5
   action:
     service: light.turn_on
     data_template:
@@ -324,16 +281,43 @@
         - light.family_room
         - light.living_room
         - light.outside
-      profile: >
-        {% if now().hour >= 6 and now().hour < 12 %}
-        energize
-        {% elif now().hour >= 12 and now().hour < 18 %}
-        concentrate
-        {% elif now().hour >= 18 and now().hour < 24 %}
-        read
-        {% else %}
-        relax
-        {% endif %}
+      profile: concentrate
+
+
+- alias: turn on lights at sunset
+  trigger:
+    - platform: sun
+      event: sunset
+    # - platform: numeric_state
+    #   entity_id: sun.sun
+    #   value_template: '{{ state.attributes.elevation }}'
+    #   below: 1.5
+  action:
+    service: light.turn_on
+    data_template:
+      entity_id:
+        - light.family_room
+        - light.living_room
+        - light.outside
+      profile: concentrate
+
+
+- alias: turn on lights after sunset
+  trigger:
+    - platform: sun
+      event: sunset
+      offset: "+01:00:00"
+    # - platform: numeric_state
+    #   entity_id: sun.sun
+    #   value_template: '{{ state.attributes.elevation }}'
+    #   below: -2.5
+  action:
+    service: light.turn_on
+    data_template:
+      entity_id:
+        - light.family_room
+        - light.living_room
+      profile: read
 
 
 #######################
