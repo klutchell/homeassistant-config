@@ -1,26 +1,26 @@
 
 #######################
-# vacuum when away
+# home and away
 #######################
 
 
 - alias: turn on vacuum when away
   trigger:
-    platform: state
-    entity_id: sensor.away_mode
-    from: 'off'
-    to: 'on'
+    - platform: state
+      entity_id: sensor.away_mode
+      from: 'off'
+      to: 'on'
   action:
-    service: vacuum.turn_on
-    entity_id: vacuum.consuela
+    - service: vacuum.turn_on
+      entity_id: vacuum.consuela
 
 
 - alias: turn off vacuum when home
   trigger:
-    platform: state
-    entity_id: sensor.away_mode
-    from: 'on'
-    to: 'off'
+    - platform: state
+      entity_id: sensor.away_mode
+      from: 'on'
+      to: 'off'
   action:
     - service: vacuum.stop
       entity_id: vacuum.consuela
@@ -28,50 +28,64 @@
       entity_id: vacuum.consuela
 
 
-#######################
-# lights when away
-#######################
-
-
 - alias: turn off lights when away
   trigger:
-    platform: state
-    entity_id: sensor.away_mode
-    from: 'off'
-    to: 'on'
+    - platform: state
+      entity_id: sensor.away_mode
+      from: 'off'
+      to: 'on'
   action:
-    service: light.turn_off
-    data:
-      entity_id:
-        - light.master_bedroom
-        - light.living_room
-        - light.family_room
+    - service: light.turn_off
+      data:
+        entity_id:
+          - light.master_bedroom
+          - light.living_room
+          - light.family_room
 
 
 - alias: turn on lights when home
   trigger:
-    platform: state
-    entity_id: sensor.away_mode
-    from: 'on'
-    to: 'off'
+    - platform: state
+      entity_id: sensor.away_mode
+      from: 'on'
+      to: 'off'
   condition:
-    condition: state
-    entity_id: sun.sun
-    state: 'below_horizon'
+    - condition: state
+      entity_id: sun.sun
+      state: 'below_horizon'
   action:
-    service: light.turn_on
-    data_template:
-      entity_id:
-        - light.living_room
-        - light.family_room
-        - light.outside
-      profile:
-        value_template: "{{ sensor.current_sun_profile }}"
+    - service: script.light_turn_on
+      data_template:
+        entity_id: light.family_room
+    - service: script.light_turn_on
+      data_template:
+        entity_id: light.living_room
+    - service: script.light_turn_on
+      data_template:
+        entity_id: light.outside
 
 
 #######################
-# time of day profiles
+# auto-apply profiles
 #######################
+
+
+- alias: change outside light profile
+  trigger:
+    - platform: state
+      entity_id: light.outside
+      from: 'off'
+      to: 'on'
+    - platform: state
+      entity_id: sensor.next_sun_event
+  condition:
+    - condition: state
+      entity_id: light.outside
+      state: 'on'
+  action:
+    - service: script.light_turn_on
+      data_template:
+        entity_id: light.outside
 
 
 - alias: change living_room light profile
@@ -80,12 +94,16 @@
       entity_id: light.living_room
       from: 'off'
       to: 'on'
-  action:
-    service: light.turn_on
-    data_template:
+    - platform: state
+      entity_id: sensor.next_sun_event
+  condition:
+    - condition: state
       entity_id: light.living_room
-      profile:
-        value_template: "{{ sensor.current_sun_profile }}"
+      state: 'on'
+  action:
+    - service: script.light_turn_on
+      data_template:
+        entity_id: light.living_room
 
 
 - alias: change family_room light profile
@@ -94,12 +112,16 @@
       entity_id: light.family_room
       from: 'off'
       to: 'on'
-  action:
-    service: light.turn_on
-    data_template:
+    - platform: state
+      entity_id: sensor.next_sun_event
+  condition:
+    - condition: state
       entity_id: light.family_room
-      profile:
-        value_template: "{{ sensor.current_sun_profile }}"
+      state: 'on'
+  action:
+    - service: script.light_turn_on
+      data_template:
+        entity_id: light.family_room
 
 
 - alias: change master_bedroom light profile
@@ -108,21 +130,24 @@
       entity_id: light.master_bedroom
       from: 'off'
       to: 'on'
+    - platform: state
+      entity_id: sensor.next_sun_event
   condition:
+    - condition: state
+      entity_id: light.master_bedroom
+      state: 'on'
     - condition: numeric_state
       entity_id: light.master_bedroom
       value_template: '{{ states.light.master_bedroom.attributes.brightness }}'
       above: 100
   action:
-    service: light.turn_on
-    data_template:
-      entity_id: light.master_bedroom
-      profile:
-        value_template: "{{ sensor.current_sun_profile }}"
+    - service: script.light_turn_on
+      data_template:
+        entity_id: light.master_bedroom
 
 
 #######################
-# wake and sleep
+# wake up on weekdays
 #######################
 
 
@@ -141,52 +166,47 @@
   action:
     - service: light.turn_on
       data:
-        entity_id:
-          - light.master_bedroom
+        entity_id: light.master_bedroom
         profile: relax
         brightness: 1
     - delay:
         seconds: 1
     - service: light.turn_on
       data:
-        entity_id:
-          - light.master_bedroom
+        entity_id: light.master_bedroom
         brightness: 254
         transition: 900
-
-
-- alias: turn off lights at 11pm
-  trigger:
-    platform: time
-    at: '23:00:00'
-  action:
-    service: light.turn_off
-    data:
-      entity_id:
-        - light.family_room
-        - light.living_room
-        - light.outside
 
 
 #######################
 # sunrise and sunset
 #######################
 
+# example sun events:
+# dawn     : 6:48 am  : 7:19 am  : energize
+# rising   : 7:19 am  : 12:17 pm : concentrate
+# +1 hr    : 8:19 am  : 12:17 am : concentrate
+# noon     : 12:17 pm : 5:14 pm  : off
+# -1 hr    : 4:14 pm  : 5:45 pm  : concentrate
+# setting  : 5:14 pm  : 5:45 pm  : concentrate
+# dusk     : 5:45 pm  : 12:17 am : read
+# midnight : 12:17 am : 6:48 am  : off
 
-- alias: turn on lights before sunrise
+- alias: turn on lights at dawn
   trigger:
-    - platform: sun
-      event: sunrise
-      offset: "-01:00:00"
+    - platform: state
+      entity_id: sensor.next_sun_event
+      from: 'dawn'
   action:
-    service: light.turn_on
-    data_template:
-      entity_id:
-        - light.family_room
-        - light.living_room
-        - light.outside
-      profile:
-        value_template: "{{ sensor.current_sun_profile }}"
+    - service: script.light_turn_on
+      data_template:
+        entity_id: light.family_room
+    - service: script.light_turn_on
+      data_template:
+        entity_id: light.living_room
+    - service: script.light_turn_on
+      data_template:
+        entity_id: light.outside
 
 
 - alias: turn off lights after sunrise
@@ -195,13 +215,13 @@
       event: sunrise
       offset: "+01:00:00"
   action:
-    service: light.turn_off
-    data:
-      entity_id:
-        - light.family_room
-        - light.living_room
-        - light.outside
-        - light.master_bedroom
+    - service: light.turn_off
+      data:
+        entity_id:
+          - light.family_room
+          - light.living_room
+          - light.outside
+          - light.master_bedroom
 
 
 - alias: turn on lights before sunset
@@ -210,97 +230,26 @@
       event: sunset
       offset: "-01:00:00"
   action:
-    service: light.turn_on
-    data_template:
-      entity_id:
-        - light.family_room
-        - light.living_room
-        - light.outside
-      profile:
-        value_template: "{{ sensor.current_sun_profile }}"
+    - service: script.light_turn_on
+      data_template:
+        entity_id: light.family_room
+    - service: script.light_turn_on
+      data_template:
+        entity_id: light.living_room
+    - service: script.light_turn_on
+      data_template:
+        entity_id: light.outside
 
 
-- alias: turn on lights after sunset
+- alias: turn off lights at midnight
   trigger:
-    - platform: sun
-      event: sunset
-      offset: "+01:00:00"
+    - platform: state
+      entity_id: sensor.next_sun_event
+      from: 'midnight'
   action:
-    service: light.turn_on
-    data_template:
-      entity_id:
-        - light.family_room
-        - light.living_room
-      profile:
-        value_template: "{{ sensor.current_sun_profile }}"
-
-
-#######################
-# motion and no motion
-#######################
-
-
-# - alias: turn on lights when motion detected
-#   trigger:
-#     - platform: state
-#       entity_id: binary_sensor.kitchen_camera_motion_detected
-#       to: 'on'
-#     - platform: state
-#       entity_id: binary_sensor.kitchen_camera_sound_detected
-#       to: 'on'
-#     - platform: state
-#       entity_id: binary_sensor.kitchen_camera_person_detected
-#       to: 'on'
-#   condition:
-#     # - condition: state
-#     #   entity_id: sensor.away_mode
-#     #   state: 'on'
-#     # - condition: state
-#     #   entity_id: sun.sun
-#     #   state: 'below_horizon'
-#     condition: state
-#     entity_id: light.family_room
-#     state: 'off'
-#   action:
-#     service: light.turn_on
-#     data_template:
-#       entity_id:
-#         - light.family_room
-#       profile:
-#         value_template: "{{ sensor.current_sun_profile }}"
-
-
-# - alias: turn off lights after last motion detected
-#   trigger:
-#     platform: time
-#     minutes: '/5' # check every 5 min
-#     seconds: 00
-#   condition:
-#     # - condition: state
-#     #   entity_id: sensor.away_mode
-#     #   state: 'on'
-#     - condition: state
-#       entity_id: light.family_room
-#       state: 'on'
-#       for:
-#         minutes: 60 # only if light on for 60 min
-#     - condition: state
-#       entity_id: binary_sensor.kitchen_camera_motion_detected
-#       state: 'off'
-#       for:
-#         minutes: 60 # only if no motion for for 60 min
-#     - condition: state
-#       entity_id: binary_sensor.kitchen_camera_sound_detected
-#       state: 'off'
-#       for:
-#         minutes: 60 # only if no sound for for 60 min
-#     - condition: state
-#       entity_id: binary_sensor.kitchen_camera_person_detected
-#       state: 'off'
-#       for:
-#         minutes: 60 # only if no person for for 60 min
-#   action:
-#     service: light.turn_off
-#     data:
-#       entity_id:
-#         - light.family_room
+    - service: light.turn_off
+      data:
+        entity_id:
+          - light.family_room
+          - light.living_room
+          - light.outside

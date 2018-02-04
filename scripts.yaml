@@ -1,0 +1,23 @@
+  light_turn_on:
+    sequence:
+      - service: light.turn_on
+        data_template:
+          entity_id: "{{ entity_id }}"
+          profile: >-
+            {%- if entity_id == 'light.outside' %}
+            concentrate
+            {%- else %}
+            {% if is_state('sensor.next_sun_event','rising') %}
+            energize
+            {% elif is_state('sensor.next_sun_event','noon') %}
+            concentrate
+            {% elif is_state('sensor.next_sun_event','setting') %}
+            concentrate
+            {% elif is_state('sensor.next_sun_event','dusk') %}
+            concentrate
+            {% elif is_state('sensor.next_sun_event','midnight') %}
+            read
+            {% elif is_state('sensor.next_sun_event','dawn') %}
+            relax
+            {% endif %}
+            {% endif %}

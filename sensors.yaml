@@ -58,18 +58,67 @@
 
 - platform: template
   sensors:
-    current_sun_profile:
+    living_room_light_profile:
       value_template: >-
-        {% if is_state('sensor.next_sun_event','noon') %}
+        {% if states.light.living_room.attributes.xy_color == [0.3146,0.3304] %}
         energize
-        {% elif is_state('sensor.next_sun_event','setting') %}
+        {% elif states.light.living_room.attributes.xy_color == [0.3682,0.3715] %}
         concentrate
-        {% elif is_state('sensor.next_sun_event','dusk') %}
+        {% elif states.light.living_room.attributes.xy_color == [0.4452,0.4068] %}
         read
-        {% elif is_state('sensor.next_sun_event','midnight') %}
+        {% elif states.light.living_room.attributes.xy_color == [0.5014,0.4153] %}
         relax
-        {% elif is_state('sensor.next_sun_event','dawn') %}
-        relax
-        {% elif is_state('sensor.next_sun_event','rising') %}
+        {% else %}
+        no profile
+        {% endif %}
+
+
+- platform: template
+  sensors:
+    family_room_light_profile:
+      value_template: >-
+        {% if states.light.family_room.attributes.xy_color == [0.3146,0.3304] %}
         energize
+        {% elif states.light.family_room.attributes.xy_color == [0.3682,0.3715] %}
+        concentrate
+        {% elif states.light.family_room.attributes.xy_color == [0.4452,0.4068] %}
+        read
+        {% elif states.light.family_room.attributes.xy_color == [0.5014,0.4153] %}
+        relax
+        {% else %}
+        no profile
+        {% endif %}
+
+
+- platform: template
+  sensors:
+    outside_light_profile:
+      value_template: >-
+        {% if states.light.outside.attributes.xy_color == [0.3146,0.3304] %}
+        energize
+        {% elif states.light.outside.attributes.xy_color == [0.3682,0.3715] %}
+        concentrate
+        {% elif states.light.outside.attributes.xy_color == [0.4452,0.4068] %}
+        read
+        {% elif states.light.outside.attributes.xy_color == [0.5014,0.4153] %}
+        relax
+        {% else %}
+        no profile
+        {% endif %}
+
+
+- platform: template
+  sensors:
+    master_bedroom_light_profile:
+      value_template: >-
+        {% if states.light.master_bedroom.attributes.xy_color == [0.3146,0.3304] %}
+        energize
+        {% elif states.light.master_bedroom.attributes.xy_color == [0.3682,0.3715] %}
+        concentrate
+        {% elif states.light.master_bedroom.attributes.xy_color == [0.4452,0.4068] %}
+        read
+        {% elif states.light.master_bedroom.attributes.xy_color == [0.5014,0.4153] %}
+        relax
+        {% else %}
+        no profile
         {% endif %}
