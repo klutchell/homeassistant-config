@@ -10,7 +10,7 @@
             {% if is_state('sensor.next_sun_event','rising') %}
             energize
             {% elif is_state('sensor.next_sun_event','noon') %}
-            concentrate
+            energize
             {% elif is_state('sensor.next_sun_event','setting') %}
             concentrate
             {% elif is_state('sensor.next_sun_event','dusk') %}

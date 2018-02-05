@@ -56,6 +56,33 @@
         {{ next_event }}
 
 
+# preferred_light_profile example:
+# dawn to rising   : 6:48 am  to 7:19 am  : energize
+# rising to noon   : 7:19 am  to 12:17 pm : energize
+# noon to setting  : 12:17 pm to 5:14 pm  : concentrate
+# setting to dusk  : 5:14 pm  to 5:45 pm  : concentrate
+# dusk to midnight : 5:45 pm  to 12:17 am : read
+# midnight to dawn : 12:17 am to 6:48 am  : relax
+
+- platform: template
+  sensors:
+    preferred_light_profile:
+      value_template: >-
+        {% if is_state('sensor.next_sun_event','dawn') %}
+        relax
+        {% elif is_state('sensor.next_sun_event','rising') %}
+        energize
+        {% elif is_state('sensor.next_sun_event','noon') %}
+        energize
+        {% elif is_state('sensor.next_sun_event','setting') %}
+        concentrate
+        {% elif is_state('sensor.next_sun_event','dusk') %}
+        concentrate
+        {% elif is_state('sensor.next_sun_event','midnight') %}
+        read
+        {% endif %}
+
+
 - platform: template
   sensors:
     living_room_light_profile:
