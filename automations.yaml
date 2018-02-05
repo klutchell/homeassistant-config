@@ -10,6 +10,10 @@
       entity_id: sensor.away_mode
       from: 'off'
       to: 'on'
+  condition:
+    - condition: state
+      entity_id: vacuum.consuela
+      state: 'off'
   action:
     - service: vacuum.turn_on
       entity_id: vacuum.consuela
@@ -21,10 +25,12 @@
       entity_id: sensor.away_mode
       from: 'on'
       to: 'off'
-  action:
-    - service: vacuum.stop
+  condition:
+    - condition: state
       entity_id: vacuum.consuela
-    - service: vacuum.return_to_base
+      state: 'on'
+  action:
+    - service: vacuum.turn_off
       entity_id: vacuum.consuela
 
 
