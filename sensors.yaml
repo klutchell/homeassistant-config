@@ -85,6 +85,44 @@
 
 - platform: template
   sensors:
+    preferred_light_color_temp:
+      value_template: >-
+        {% if is_state('sensor.next_sun_event','dawn') %}
+        443
+        {% elif is_state('sensor.next_sun_event','rising') %}
+        156
+        {% elif is_state('sensor.next_sun_event','noon') %}
+        156
+        {% elif is_state('sensor.next_sun_event','setting') %}
+        230
+        {% elif is_state('sensor.next_sun_event','dusk') %}
+        230
+        {% elif is_state('sensor.next_sun_event','midnight') %}
+        343
+        {% endif %}
+
+
+- platform: template
+  sensors:
+    preferred_light_brightness:
+      value_template: >-
+        {% if is_state('sensor.next_sun_event','dawn') %}
+        144
+        {% elif is_state('sensor.next_sun_event','rising') %}
+        254
+        {% elif is_state('sensor.next_sun_event','noon') %}
+        254
+        {% elif is_state('sensor.next_sun_event','setting') %}
+        254
+        {% elif is_state('sensor.next_sun_event','dusk') %}
+        254
+        {% elif is_state('sensor.next_sun_event','midnight') %}
+        254
+        {% endif %}
+
+
+- platform: template
+  sensors:
     living_room_light_profile:
       value_template: >-
         {% if states.light.living_room.attributes.xy_color == [0.3146,0.3304] %}
@@ -138,13 +176,13 @@
   sensors:
     master_bedroom_light_profile:
       value_template: >-
-        {% if states.light.master_bedroom.attributes.xy_color == [0.3146,0.3304] %}
+        {% if states.light.master_bedroom.attributes.color_temp == 156 %}
         energize
-        {% elif states.light.master_bedroom.attributes.xy_color == [0.3682,0.3715] %}
+        {% elif states.light.master_bedroom.attributes.color_temp == 230 %}
         concentrate
-        {% elif states.light.master_bedroom.attributes.xy_color == [0.4452,0.4068] %}
+        {% elif states.light.master_bedroom.attributes.color_temp == 343 %}
         read
-        {% elif states.light.master_bedroom.attributes.xy_color == [0.5014,0.4153] %}
+        {% elif states.light.master_bedroom.attributes.color_temp == 443 %}
         relax
         {% else %}
         no profile

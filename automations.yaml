@@ -87,7 +87,7 @@
   action:
     - service: light.turn_on
       data_template:
-        entity_id: light.family_room
+        entity_id: light.living_room
         profile: "{{ states('sensor.preferred_light_profile') }}"
 
 
@@ -129,8 +129,9 @@
   action:
     - service: light.turn_on
       data_template:
-        entity_id: light.family_room
-        profile: "{{ states('sensor.preferred_light_profile') }}"
+        entity_id: light.master_bedroom
+        color_temp: "{{ states('sensor.preferred_light_color_temp') }}"
+        brightness: "{{ states('sensor.preferred_light_brightness') }}"
 
 
 #######################
