@@ -155,15 +155,16 @@
     - service: light.turn_on
       data:
         entity_id: light.master_bedroom
-        profile: "{{ states('sensor.preferred_light_profile') }}"
+        color_temp: "{{ states('sensor.preferred_light_color_temp') }}"
         brightness: 1
     - delay:
         seconds: 1
     - service: light.turn_on
       data:
         entity_id: light.master_bedroom
-        brightness: 254
-        transition: 900
+        color_temp: "{{ states('sensor.preferred_light_color_temp') }}"
+        brightness: "{{ states('sensor.preferred_light_brightness') }}"
+        transition: 300
 
 
 #######################
