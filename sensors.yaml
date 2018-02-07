@@ -1,4 +1,14 @@
 
+- platform: time_date
+  display_options:
+    - 'time'
+    - 'date'
+    - 'date_time'
+    - 'time_date'
+    - 'time_utc'
+    - 'beat'
+
+
 - platform: yr
   name: Weather
   # forecast: 24
@@ -134,7 +144,7 @@
         {% elif states.light.living_room.attributes.xy_color == [0.5014,0.4153] %}
         relax
         {% else %}
-        no profile
+        none
         {% endif %}
 
 
@@ -151,7 +161,7 @@
         {% elif states.light.family_room.attributes.xy_color == [0.5014,0.4153] %}
         relax
         {% else %}
-        no profile
+        none
         {% endif %}
 
 
@@ -168,7 +178,7 @@
         {% elif states.light.outside.attributes.xy_color == [0.5014,0.4153] %}
         relax
         {% else %}
-        no profile
+        none
         {% endif %}
 
 
@@ -185,5 +195,5 @@
         {% elif states.light.master_bedroom.attributes.color_temp == 443 %}
         relax
         {% else %}
-        no profile
+        none
         {% endif %}

@@ -62,20 +62,41 @@
   action:
     - service: light.turn_on
       data_template:
-        profile: concentrate
-        entity_id:
-          - light.outside
-    - service: light.turn_on
-      data_template:
         profile: "{{ states('sensor.preferred_light_profile') }}"
         entity_id:
           - light.family_room
           - light.living_room
+          - light.outside
 
 
 #######################
 # light profiles
 #######################
+
+
+- alias: change outside light profile
+  trigger:
+    - platform: state
+      entity_id: light.outside
+      from: 'off'
+      to: 'on'
+    - platform: state
+      entity_id: sensor.next_sun_event
+  condition:
+    - condition: state
+      entity_id: light.outside
+      state: 'on'
+    - condition: numeric_state
+      entity_id: light.outside
+      value_template: '{{ states.light.outside.attributes.brightness }}'
+      above: 100
+  action:
+    - service: light.turn_on
+      data_template:
+        entity_id: light.outside
+        profile: "{{ states('sensor.preferred_light_profile') }}"
+        color_temp: "{{ states('sensor.preferred_light_color_temp') }}"
+        brightness: "{{ states('sensor.preferred_light_brightness') }}"
 
 
 - alias: change living_room light profile
@@ -99,6 +120,8 @@
       data_template:
         entity_id: light.living_room
         profile: "{{ states('sensor.preferred_light_profile') }}"
+        color_temp: "{{ states('sensor.preferred_light_color_temp') }}"
+        brightness: "{{ states('sensor.preferred_light_brightness') }}"
 
 
 - alias: change family_room light profile
@@ -122,6 +145,8 @@
       data_template:
         entity_id: light.family_room
         profile: "{{ states('sensor.preferred_light_profile') }}"
+        color_temp: "{{ states('sensor.preferred_light_color_temp') }}"
+        brightness: "{{ states('sensor.preferred_light_brightness') }}"
 
 
 - alias: change master_bedroom light profile
@@ -144,6 +169,7 @@
     - service: light.turn_on
       data_template:
         entity_id: light.master_bedroom
+        profile: "{{ states('sensor.preferred_light_profile') }}"
         color_temp: "{{ states('sensor.preferred_light_color_temp') }}"
         brightness: "{{ states('sensor.preferred_light_brightness') }}"
 
@@ -156,11 +182,12 @@
 # wake     : 6:30 am
 # dawn     : 6:48 am
 # rising   : 7:19 am
-# +1.5 hr  : 8:49 am
+# +1 hr    : 8:49 am
 # noon     : 12:17 pm
-# -1.5 hr  : 3:44 pm
+# -1 hr    : 3:44 pm
 # setting  : 5:14 pm
 # dusk     : 5:45 pm
+# -1 hr    : 11:17 am
 # midnight : 12:17 am
 
 
@@ -176,39 +203,27 @@
         - wed
         - thu
         - fri
-    - condition: state
-      entity_id: light.master_bedroom
-      state: 'off'
   action:
     - service: light.turn_on
       data:
         profile: relax
+        color_temp: 443
         brightness: 1
         entity_id:
           - light.family_room
           - light.living_room
           - light.outside
-    - service: light.turn_on
-      data:
-        color_temp: 443
-        brightness: 1
-        entity_id:
           - light.master_bedroom
     - service: light.turn_on
       data:
         profile: energize
+        color_temp: 156
         brightness: 254
         transition: 600
         entity_id:
           - light.family_room
           - light.living_room
           - light.outside
-    - service: light.turn_on
-      data:
-        color_temp: 156
-        brightness: 254
-        transition: 600
-        entity_id:
           - light.master_bedroom
 
 
@@ -225,32 +240,23 @@
     - service: light.turn_on
       data:
         profile: relax
+        color_temp: 443
         brightness: 1
         entity_id:
           - light.family_room
           - light.living_room
           - light.outside
-    - service: light.turn_on
-      data:
-        color_temp: 443
-        brightness: 1
-        entity_id:
           - light.master_bedroom
     - service: light.turn_on
       data:
         profile: energize
+        color_temp: 156
         brightness: 254
         transition: 600
         entity_id:
           - light.family_room
           - light.living_room
           - light.outside
-    - service: light.turn_on
-      data:
-        color_temp: 156
-        brightness: 254
-        transition: 600
-        entity_id:
           - light.master_bedroom
 
 
@@ -258,7 +264,7 @@
   trigger:
     - platform: sun
       event: sunrise
-      offset: "+01:30:00"
+      offset: "+01:00:00"
   action:
     - service: light.turn_off
       data:
@@ -273,26 +279,21 @@
   trigger:
     - platform: sun
       event: sunset
-      offset: "-01:30:00"
+      offset: "-01:00:00"
   action:
-    - service: light.turn_on
-      data_template:
-        profile: concentrate
-        entity_id:
-          - light.outside
     - service: light.turn_on
       data_template:
         profile: "{{ states('sensor.preferred_light_profile') }}"
         entity_id:
           - light.family_room
           - light.living_room
+          - light.outside
 
 
-- alias: turn off lights at midnight
+- alias: turn off lights before midnight
   trigger:
-    - platform: state
-      entity_id: sensor.next_sun_event
-      from: 'midnight'
+    - platform: time
+      at: '23:00:00'
   action:
     - service: light.turn_off
       data:
