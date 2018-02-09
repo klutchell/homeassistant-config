@@ -1,13 +1,95 @@
-  light_turn_on:
+
+
+  turn_off_master_bedroom_light:
+    sequence:
+      - service: light.turn_off
+        entity_id: light.master_bedroom
+
+
+  turn_on_master_bedroom_light:
+    sequence:
+      - condition: state
+        entity_id: sensor.away_mode
+        state: 'off'
+      - service: light.turn_on
+        data_template:
+          entity_id: light.master_bedroom
+          brightness: >-
+            {% if is_state('sensor.next_sun_event','dawn') %}
+            144
+            {% elif is_state('sensor.next_sun_event','rising') %}
+            254
+            {% elif is_state('sensor.next_sun_event','noon') %}
+            254
+            {% elif is_state('sensor.next_sun_event','setting') %}
+            254
+            {% elif is_state('sensor.next_sun_event','dusk') %}
+            254
+            {% elif is_state('sensor.next_sun_event','midnight') %}
+            254
+            {% endif %}
+          color_temp: >-
+            {%- if is_state('sensor.next_sun_event','dawn') %}
+            443
+            {% elif is_state('sensor.next_sun_event','rising') %}
+            156
+            {% elif is_state('sensor.next_sun_event','noon') %}
+            156
+            {% elif is_state('sensor.next_sun_event','setting') %}
+            230
+            {% elif is_state('sensor.next_sun_event','dusk') %}
+            230
+            {% elif is_state('sensor.next_sun_event','midnight') %}
+            343
+            {% endif %}
+
+
+  fade_on_master_bedroom_light:
+    sequence:
+      - condition: state
+        entity_id: sensor.away_mode
+        state: 'off'
+      - condition: state
+        entity_id: light.master_bedroom
+        state: 'off'
+      - service: light.turn_on
+        data:
+          color_temp: 443
+          brightness: 1
+          entity_id: light.master_bedroom
+      - service: light.turn_on
+        data:
+          color_temp: 156
+          brightness: 254
+          transition: 600
+          entity_id: light.master_bedroom
+
+
+  change_master_bedroom_light_profile:
+    sequence:
+      - condition: state
+        entity_id: light.master_bedroom
+        state: 'on'
+      - condition: numeric_state
+        entity_id: light.master_bedroom
+        value_template: '{{ states.light.master_bedroom.attributes.brightness }}'
+        above: 100
+      - service: script.turn_on_master_bedroom_light
+
+
+  turn_off_living_room_light:
+    sequence:
+      - service: light.turn_off
+        entity_id: light.living_room
+
+
+  turn_on_living_room_light:
     sequence:
       - service: light.turn_on
         data_template:
-          entity_id: "{{ entity_id }}"
+          entity_id: light.living_room
           profile: >-
-            {%- if entity_id == 'light.outside' %}
-            concentrate
-            {%- else %}
-            {% if is_state('sensor.next_sun_event','rising') %}
+            {%- if is_state('sensor.next_sun_event','rising') %}
             energize
             {% elif is_state('sensor.next_sun_event','noon') %}
             energize
@@ -20,4 +102,161 @@
             {% elif is_state('sensor.next_sun_event','dawn') %}
             relax
             {% endif %}
+
+
+  fade_on_living_room_light:
+    sequence:
+      - condition: state
+        entity_id: sensor.away_mode
+        state: 'off'
+      - condition: state
+        entity_id: light.living_room
+        state: 'off'
+      - service: light.turn_on
+        data:
+          profile: relax
+          brightness: 1
+          entity_id: light.living_room
+      - service: light.turn_on
+        data:
+          profile: energize
+          brightness: 254
+          transition: 600
+          entity_id: light.living_room
+
+
+  change_living_room_light_profile:
+    sequence:
+      - condition: state
+        entity_id: light.living_room
+        state: 'on'
+      - condition: numeric_state
+        entity_id: light.living_room
+        value_template: '{{ states.light.living_room.attributes.brightness }}'
+        above: 100
+      - service: script.turn_on_living_room_light
+
+
+  turn_off_family_room_light:
+    sequence:
+      - service: light.turn_off
+        entity_id: light.family_room
+
+
+  turn_on_family_room_light:
+    sequence:
+      - condition: state
+        entity_id: sensor.away_mode
+        state: 'off'
+      - service: light.turn_on
+        data_template:
+          entity_id: light.family_room
+          profile: >-
+            {%- if is_state('sensor.next_sun_event','rising') %}
+            energize
+            {% elif is_state('sensor.next_sun_event','noon') %}
+            energize
+            {% elif is_state('sensor.next_sun_event','setting') %}
+            concentrate
+            {% elif is_state('sensor.next_sun_event','dusk') %}
+            concentrate
+            {% elif is_state('sensor.next_sun_event','midnight') %}
+            read
+            {% elif is_state('sensor.next_sun_event','dawn') %}
+            relax
             {% endif %}
+
+
+  fade_on_family_room_light:
+    sequence:
+      - condition: state
+        entity_id: sensor.away_mode
+        state: 'off'
+      - condition: state
+        entity_id: light.family_room
+        state: 'off'
+      - service: light.turn_on
+        data:
+          profile: relax
+          brightness: 1
+          entity_id: light.family_room
+      - service: light.turn_on
+        data:
+          profile: energize
+          brightness: 254
+          transition: 600
+          entity_id: light.family_room
+
+
+  change_family_room_light_profile:
+    sequence:
+      - condition: state
+        entity_id: light.family_room
+        state: 'on'
+      - condition: numeric_state
+        entity_id: light.family_room
+        value_template: '{{ states.light.family_room.attributes.brightness }}'
+        above: 100
+      - service: script.turn_on_family_room_light
+
+
+  turn_off_outside_light:
+    sequence:
+      - service: light.turn_off
+        entity_id: light.outside
+
+
+  turn_on_outside_light:
+    sequence:
+      - service: light.turn_on
+        data_template:
+          entity_id: light.outside
+          profile: >-
+            {%- if is_state('sensor.next_sun_event','rising') %}
+            energize
+            {% elif is_state('sensor.next_sun_event','noon') %}
+            energize
+            {% elif is_state('sensor.next_sun_event','setting') %}
+            concentrate
+            {% elif is_state('sensor.next_sun_event','dusk') %}
+            concentrate
+            {% elif is_state('sensor.next_sun_event','midnight') %}
+            concentrate
+            {% elif is_state('sensor.next_sun_event','dawn') %}
+            concentrate
+            {% endif %}
+
+
+  fade_on_outside_light:
+    sequence:
+      - condition: state
+        entity_id: sensor.away_mode
+        state: 'off'
+      - condition: state
+        entity_id: light.outside
+        state: 'off'
+      - service: light.turn_on
+        data:
+          profile: energize
+          brightness: 1
+          entity_id: light.outside
+      - service: light.turn_on
+        data:
+          profile: energize
+          brightness: 254
+          transition: 600
+          entity_id: light.outside
+
+
+  change_outside_light_profile:
+    sequence:
+      - condition: state
+        entity_id: light.outside
+        state: 'on'
+      - condition: numeric_state
+        entity_id: light.outside
+        value_template: '{{ states.light.outside.attributes.brightness }}'
+        above: 100
+      - service: script.turn_on_outside_light
+
+
