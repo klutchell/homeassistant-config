@@ -215,28 +215,28 @@
   change_master_bedroom_light_profile:
     sequence:
       - condition: template
-        value_template: '{{ sensor.master_bedroom_light_profile != none }}'
+        value_template: '{{ states("sensor.master_bedroom_light_profile") != "none" }}'
       - service: script.turn_on_master_bedroom_light
 
 
   change_living_room_light_profile:
     sequence:
       - condition: template
-        value_template: '{{ sensor.living_room_light_profile != none }}'
+        value_template: '{{ states("sensor.living_room_light_profile") != "none" }}'
       - service: script.turn_on_living_room_light
 
 
   change_family_room_light_profile:
     sequence:
       - condition: template
-        value_template: '{{ sensor.family_room_light_profile != none }}'
+        value_template: '{{ states("sensor.family_room_light_profile") != "none" }}'
       - service: script.turn_on_family_room_light
 
 
   change_outside_light_profile:
     sequence:
       - condition: template
-        value_template: '{{ sensor.outside_light_profile != none }}'
+        value_template: '{{ states("sensor.outside_light_profile") != "none" }}'
       - service: script.turn_on_outside_light
 
 
