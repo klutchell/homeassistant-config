@@ -1,12 +1,13 @@
 
-- platform: time_date
-  display_options:
-    - 'time'
-    - 'date'
-    - 'date_time'
-    - 'time_date'
-    - 'time_utc'
-    - 'beat'
+
+# - platform: time_date
+#   display_options:
+#     - 'time'
+#     - 'date'
+#     - 'date_time'
+#     - 'time_date'
+#     - 'time_utc'
+#     - 'beat'
 
 
 - platform: yr
@@ -70,13 +71,13 @@
   sensors:
     living_room_light_profile:
       value_template: >-
-        {% if states.light.living_room.attributes.xy_color == [0.3146,0.3304] %}
+        {% if states.light.living_room.attributes.xy_color == [0.3146,0.3304] and states.light.living_room.attributes.brightness == 254 %}
         energize
-        {% elif states.light.living_room.attributes.xy_color == [0.3682,0.3715] %}
+        {% elif states.light.living_room.attributes.xy_color == [0.3682,0.3715] and states.light.living_room.attributes.brightness == 254 %}
         concentrate
-        {% elif states.light.living_room.attributes.xy_color == [0.4452,0.4068] %}
+        {% elif states.light.living_room.attributes.xy_color == [0.4452,0.4068] and states.light.living_room.attributes.brightness == 254 %}
         read
-        {% elif states.light.living_room.attributes.xy_color == [0.5014,0.4153] %}
+        {% elif states.light.living_room.attributes.xy_color == [0.5014,0.4153] and states.light.living_room.attributes.brightness == 144 %}
         relax
         {% else %}
         none
@@ -87,13 +88,13 @@
   sensors:
     family_room_light_profile:
       value_template: >-
-        {% if states.light.family_room.attributes.xy_color == [0.3146,0.3304] %}
+        {% if states.light.family_room.attributes.xy_color == [0.3146,0.3304] and states.light.family_room.attributes.brightness == 254 %}
         energize
-        {% elif states.light.family_room.attributes.xy_color == [0.3682,0.3715] %}
+        {% elif states.light.family_room.attributes.xy_color == [0.3682,0.3715] and states.light.family_room.attributes.brightness == 254 %}
         concentrate
-        {% elif states.light.family_room.attributes.xy_color == [0.4452,0.4068] %}
+        {% elif states.light.family_room.attributes.xy_color == [0.4452,0.4068] and states.light.family_room.attributes.brightness == 254 %}
         read
-        {% elif states.light.family_room.attributes.xy_color == [0.5014,0.4153] %}
+        {% elif states.light.family_room.attributes.xy_color == [0.5014,0.4153] and states.light.family_room.attributes.brightness == 144 %}
         relax
         {% else %}
         none
@@ -104,13 +105,13 @@
   sensors:
     outside_light_profile:
       value_template: >-
-        {% if states.light.outside.attributes.xy_color == [0.3146,0.3304] %}
+        {% if states.light.outside.attributes.xy_color == [0.3146,0.3304] and states.light.outside.attributes.brightness == 254 %}
         energize
-        {% elif states.light.outside.attributes.xy_color == [0.3682,0.3715] %}
+        {% elif states.light.outside.attributes.xy_color == [0.3682,0.3715] and states.light.outside.attributes.brightness == 254 %}
         concentrate
-        {% elif states.light.outside.attributes.xy_color == [0.4452,0.4068] %}
+        {% elif states.light.outside.attributes.xy_color == [0.4452,0.4068] and states.light.outside.attributes.brightness == 254 %}
         read
-        {% elif states.light.outside.attributes.xy_color == [0.5014,0.4153] %}
+        {% elif states.light.outside.attributes.xy_color == [0.5014,0.4153] and states.light.outside.attributes.brightness == 144 %}
         relax
         {% else %}
         none
@@ -121,13 +122,13 @@
   sensors:
     master_bedroom_light_profile:
       value_template: >-
-        {% if states.light.master_bedroom.attributes.color_temp == 156 %}
+        {% if states.light.master_bedroom.attributes.color_temp == 156 and states.light.master_bedroom.attributes.brightness == 254 %}
         energize
-        {% elif states.light.master_bedroom.attributes.color_temp == 230 %}
+        {% elif states.light.master_bedroom.attributes.color_temp == 230 and states.light.master_bedroom.attributes.brightness == 254 %}
         concentrate
-        {% elif states.light.master_bedroom.attributes.color_temp == 343 %}
+        {% elif states.light.master_bedroom.attributes.color_temp == 343 and states.light.master_bedroom.attributes.brightness == 254 %}
         read
-        {% elif states.light.master_bedroom.attributes.color_temp == 443 %}
+        {% elif states.light.master_bedroom.attributes.color_temp == 443 and states.light.master_bedroom.attributes.brightness == 144 %}
         relax
         {% else %}
         none

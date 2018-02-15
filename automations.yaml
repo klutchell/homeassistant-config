@@ -114,7 +114,6 @@
   action:
     - service: script.change_master_bedroom_light_profile
 
-
 #######################
 # light schedules
 #######################
@@ -161,7 +160,6 @@
         - sat
         - sun
   action:
-    - service: script.fade_on_master_bedroom_light
     - service: script.fade_on_family_room_light
     - service: script.fade_on_living_room_light
     - service: script.fade_on_outside_light
@@ -175,7 +173,6 @@
   action:
     - service: script.turn_off_family_room_light
     - service: script.turn_off_living_room_light
-    - service: script.turn_off_master_bedroom_light
     - service: script.turn_off_outside_light
 
 

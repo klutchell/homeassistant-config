@@ -1,9 +1,15 @@
-*
 
-!*.yaml
+.HA_VERSION
+.uuid
+
+*.db
+*.conf
+*.log
 
 secrets.yaml
 
 deps
 tts
 ssl
+
+__pycache__
