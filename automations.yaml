@@ -41,9 +41,12 @@
       from: 'off'
       to: 'on'
   action:
-    - service: script.turn_off_family_room_light
-    - service: script.turn_off_living_room_light
-    - service: script.turn_off_master_bedroom_light
+    - service: light.turn_off
+      data:
+        entity_id:
+          - light.master_bedroom
+          - light.living_room
+          - light.family_room
 
 
 - alias: turn on lights when home
@@ -75,8 +78,11 @@
       to: 'on'
     - platform: state
       entity_id: sensor.next_sun_event
+  condition:
+    - condition: template
+      value_template: '{{ states("sensor.outside_light_profile") != "none" }}'
   action:
-    - service: script.change_outside_light_profile
+    - service: script.turn_on_outside_light
 
 
 - alias: change living_room light profile
@@ -87,8 +93,11 @@
       to: 'on'
     - platform: state
       entity_id: sensor.next_sun_event
+  condition:
+    - condition: template
+      value_template: '{{ states("sensor.living_room_light_profile") != "none" }}'
   action:
-    - service: script.change_living_room_light_profile
+    - service: script.turn_on_living_room_light
 
 
 - alias: change family_room light profile
@@ -99,8 +108,11 @@
       to: 'on'
     - platform: state
       entity_id: sensor.next_sun_event
+  condition:
+    - condition: template
+      value_template: '{{ states("sensor.family_room_light_profile") != "none" }}'
   action:
-    - service: script.change_family_room_light_profile
+    - service: script.turn_on_family_room_light
 
 
 - alias: change master_bedroom light profile
@@ -111,8 +123,11 @@
       to: 'on'
     - platform: state
       entity_id: sensor.next_sun_event
+  condition:
+    - condition: template
+      value_template: '{{ states("sensor.master_bedroom_light_profile") != "none" }}'
   action:
-    - service: script.change_master_bedroom_light_profile
+    - service: script.turn_on_master_bedroom_light
 
 #######################
 # light schedules
@@ -171,9 +186,13 @@
       event: sunrise
       offset: "+01:00:00"
   action:
-    - service: script.turn_off_family_room_light
-    - service: script.turn_off_living_room_light
-    - service: script.turn_off_outside_light
+    - service: light.turn_off
+      data:
+        entity_id:
+          - light.master_bedroom
+          - light.living_room
+          - light.family_room
+          - light.outside
 
 
 - alias: turn on lights before sunset
@@ -192,6 +211,9 @@
     - platform: time
       at: '23:00:00'
   action:
-    - service: script.turn_off_family_room_light
-    - service: script.turn_off_living_room_light
-    - service: script.turn_off_outside_light
+    - service: light.turn_off
+      data:
+        entity_id:
+          - light.living_room
+          - light.family_room
+          - light.outside
